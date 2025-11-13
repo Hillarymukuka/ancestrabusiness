@@ -1,0 +1,48 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv
+
+# Frontend
+frontend/
+node_modules/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Git
+.git/
+.gitignore
+
+# Documentation
+*.md
+QUICK_START.md
+CSV_STOCK_UPDATE_GUIDE.md
+AFRICAN_TIMEZONE_SUMMARY.md
+
+# Test files
+test_*.py
+*.csv
+
+# Environment
+.env
+.env.example
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Batch files
+*.bat

@@ -1,0 +1,358 @@
+[
+  {
+    "category": "Getting Started",
+    "questions": [
+      {
+        "question": "What is Ancestra Business Manager?",
+        "answer": "Ancestra is your complete business management system. It helps you track inventory, record sales, manage expenses, monitor employee performance, and generate financial reports—all in one place."
+      },
+      {
+        "question": "How do I log in?",
+        "answer": "Enter your username and password on the login page. If you're the business owner, use the credentials you set up during installation (default is username: 'owner', password: 'owner123')."
+      },
+      {
+        "question": "What can I do as a cashier?",
+        "answer": "As a cashier, you can view stock levels, record sales, and see your own sales history. You won't have access to reports, expenses, employee management, or settings."
+      },
+      {
+        "question": "What can owners and managers do?",
+        "answer": "Owners and managers have full access to all features including adding products, managing inventory, viewing all sales, tracking expenses, generating reports, creating users, and configuring settings."
+      }
+    ]
+  },
+  {
+    "category": "Dashboard",
+    "questions": [
+      {
+        "question": "What does the Dashboard show?",
+        "answer": "The Dashboard gives you a quick overview of your business: total revenue, expenses, net profit, number of orders, today's sales, best-selling products, and low-stock alerts."
+      },
+      {
+        "question": "How do I refresh the Dashboard?",
+        "answer": "The Dashboard updates automatically when you navigate to it. You can also refresh your browser to see the latest data."
+      },
+      {
+        "question": "What are low stock items?",
+        "answer": "Low stock items are products where the current quantity has reached or fallen below the reorder level you set. This helps you know when to restock before running out."
+      },
+      {
+        "question": "How do I see my best-selling products?",
+        "answer": "Check the 'Best sellers' section on your Dashboard. It shows your top 5 products based on quantity sold, along with revenue and stock status."
+      }
+    ]
+  },
+  {
+    "category": "Inventory & Stock Management",
+    "questions": [
+      {
+        "question": "How do I add a new product?",
+        "answer": "Go to Stock (Inventory), fill in the 'Add new product' form with the product name, category, price, quantity, and reorder level, then click 'Add product'. The product code is auto-generated for you."
+      },
+      {
+        "question": "What is a product code?",
+        "answer": "A product code is a unique identifier for each item (like PROD-0001). Ancestra generates this automatically when you add a product—you don't need to enter it yourself."
+      },
+      {
+        "question": "How do I update stock quantities?",
+        "answer": "On the Inventory page, use the 'Update product quantity' section. Search for the product, enter how many units to add, and click 'Update quantity'. This increases your stock level."
+      },
+      {
+        "question": "Can I search for products?",
+        "answer": "Yes! Use the search box in the 'Update product quantity' section or when adding products to a sale. You can search by product name or product code."
+      },
+      {
+        "question": "How do I import products from a CSV file?",
+        "answer": "Go to Inventory, click 'Download Sample CSV' to see the format, prepare your file with columns (name, product_code, category, price, quantity, reorder_level), then click 'Import CSV' and select your file."
+      },
+      {
+        "question": "Can I export my inventory to CSV?",
+        "answer": "Yes. On the Inventory page, click 'Export CSV'. Your browser will download a file with all your products, including product codes, quantities, and prices."
+      },
+      {
+        "question": "What does the reorder level mean?",
+        "answer": "The reorder level is the minimum quantity you want to keep in stock. When your inventory reaches this number, the product appears in low-stock alerts so you know to reorder."
+      },
+      {
+        "question": "Can I update or create products with CSV import?",
+        "answer": "Yes. If the product code in your CSV already exists, it updates that product. If it's new, it creates a new product. You'll see a summary showing how many were created, updated, or skipped."
+      },
+      {
+        "question": "What do the stock status icons mean?",
+        "answer": "Green checkmark means the product is in stock. Orange alert means low stock (at or below reorder level). Red X means out of stock (quantity is zero)."
+      }
+    ]
+  },
+  {
+    "category": "Sales & Transactions",
+    "questions": [
+      {
+        "question": "How do I record a sale?",
+        "answer": "Go to Sales, search for a product, select it, enter the quantity, and click 'Add to sale'. Repeat for more items. Optionally add a customer name and choose payment method, then click 'Complete Sale'."
+      },
+      {
+        "question": "Can I add multiple items to one sale?",
+        "answer": "Absolutely! Keep adding products to build up your sale. You'll see a running total at the bottom. When you're ready, click 'Complete Sale' to finalize the transaction."
+      },
+      {
+        "question": "What payment methods are supported?",
+        "answer": "You can choose Cash, Mobile Money, Card, or Bank Transfer when recording a sale. Select the method that matches how your customer paid."
+      },
+      {
+        "question": "How do I remove an item from a sale?",
+        "answer": "In the 'Items in sale' list, click the 'Remove' button next to any product you want to take out before completing the sale."
+      },
+      {
+        "question": "Can I see a receipt after making a sale?",
+        "answer": "Yes! After you complete a sale, a receipt preview appears on the right side showing all items, totals, payment method, and your company details."
+      },
+      {
+        "question": "What if I try to sell more than I have in stock?",
+        "answer": "Ancestra checks your inventory automatically. If you try to add more quantity than available, you'll see an error message telling you how many units are actually in stock."
+      },
+      {
+        "question": "How do I view past sales?",
+        "answer": "Scroll down on the Sales page to see 'Sales history'. You'll see all completed sales with customer name, date/time, payment method, and total amount."
+      },
+      {
+        "question": "Can I filter sales by date?",
+        "answer": "Yes. In the 'Sales history' section, use the 'Start date' and 'End date' filters, then click 'Apply filters'. Or use quick buttons like 'Today', 'This month', or 'All time'."
+      },
+      {
+        "question": "Can I search for a specific customer's sales?",
+        "answer": "Yes. Enter the customer name in the 'Customer name' filter box and click 'Apply filters' to see only sales for that customer."
+      },
+      {
+        "question": "Can cashiers see all sales?",
+        "answer": "No. Cashiers only see sales they personally recorded. Owners and managers can see all sales from all employees."
+      },
+      {
+        "question": "How do I view a receipt for a past sale?",
+        "answer": "In the Sales history table, click the 'View receipt' button next to any sale. The receipt will appear on the right showing all the details."
+      }
+    ]
+  },
+  {
+    "category": "Expenses",
+    "questions": [
+      {
+        "question": "How do I record a business expense?",
+        "answer": "Go to Expenses, fill in the description, select a category (Rent, Utilities, Salaries, Supplies, Marketing, or Other), enter the amount and date, optionally attach a receipt image, then click 'Record expense'."
+      },
+      {
+        "question": "Can I attach receipt photos to expenses?",
+        "answer": "Yes! When adding an expense, click 'Choose file' to upload a photo or scan of your receipt. This helps you keep records organized."
+      },
+      {
+        "question": "How do I see all my expenses?",
+        "answer": "All recorded expenses appear in the list at the bottom of the Expenses page, showing description, category, amount, date, and any attached receipt."
+      },
+      {
+        "question": "Can I filter expenses by date or category?",
+        "answer": "Yes. Use the 'Start date', 'End date', and 'Category' filters at the top of the expenses list, then click 'Apply filters' to narrow down the results."
+      },
+      {
+        "question": "Can cashiers record expenses?",
+        "answer": "No. Only owners and managers can record and view expenses. Cashiers don't have access to the Expenses page."
+      },
+      {
+        "question": "How do I view an attached receipt?",
+        "answer": "In the expenses list, if a receipt is attached, click the 'View receipt' link next to that expense. It will open the image in a new tab."
+      }
+    ]
+  },
+  {
+    "category": "Reports & Analytics",
+    "questions": [
+      {
+        "question": "How do I view financial reports?",
+        "answer": "Go to Reports to see your financial overview including sales, expenses, and profit broken down by day, week, and month, plus a 7-day sales vs expenses chart."
+      },
+      {
+        "question": "Can I export reports as PDF?",
+        "answer": "Yes! On the Reports page, click 'Export PDF' at the top right. A professionally formatted PDF with your Ancestra branding will download automatically."
+      },
+      {
+        "question": "What's included in the PDF report?",
+        "answer": "The PDF includes: total sales, expenses, and profit summary; daily/weekly/monthly breakdowns; 7-day sales vs expenses; best-selling products; low stock alerts; and today's statistics."
+      },
+      {
+        "question": "How often should I check reports?",
+        "answer": "It's up to you! Many business owners check daily to monitor today's sales, weekly to spot trends, and monthly for deeper analysis. Click 'Refresh' to update the data anytime."
+      },
+      {
+        "question": "Can cashiers access reports?",
+        "answer": "No. Reports are only available to owners and managers who need to analyze overall business performance."
+      }
+    ]
+  },
+  {
+    "category": "Team & Employee Management",
+    "questions": [
+      {
+        "question": "How do I add a new employee or user?",
+        "answer": "Go to Settings, scroll to 'Create new user', enter their username, full name, assign a role (Owner, Manager, or Cashier), set a password, and click 'Create user'."
+      },
+      {
+        "question": "What's the difference between Owner, Manager, and Cashier roles?",
+        "answer": "Owners have full access to everything. Managers can do everything except create users. Cashiers can only view stock and record their own sales—they can't see reports, expenses, or settings."
+      },
+      {
+        "question": "How do I see what my team is doing?",
+        "answer": "Go to Employees to see each team member's role, sales performance, and recent activity. You can filter by 'Last 7 days', 'This month', 'Past 3 months', or 'All time'."
+      },
+      {
+        "question": "Can I track who made each sale?",
+        "answer": "Yes. Every sale is automatically linked to the user who recorded it. Check the Employees page to see each person's sales stats and activity log."
+      },
+      {
+        "question": "What does the activity log show?",
+        "answer": "The activity log shows recent actions like sales recorded, products added, and other key events, along with timestamps. This helps you monitor what's happening in your business."
+      },
+      {
+        "question": "Can I see individual employee performance?",
+        "answer": "Yes. The Employees page shows sales count, total revenue, and average sale value for each team member. Use the date range selector to analyze different periods."
+      }
+    ]
+  },
+  {
+    "category": "Settings & Configuration",
+    "questions": [
+      {
+        "question": "How do I customize my receipts?",
+        "answer": "Go to Settings, scroll to 'Receipt settings', and update your company name, tagline, and footer message. These details appear on every receipt."
+      },
+      {
+        "question": "Can I add my company logo to receipts?",
+        "answer": "Yes! In Settings under 'Receipt settings', click 'Choose file' to upload your logo. It will appear on printed and digital receipts."
+      },
+      {
+        "question": "What should I put in the footer message?",
+        "answer": "The footer message appears at the bottom of receipts. You could add 'Thank you for your business!', your return policy, contact info, or business hours—whatever helps your customers."
+      },
+      {
+        "question": "Can cashiers change settings?",
+        "answer": "No. Only the business owner can access Settings to create users and update receipt configurations."
+      },
+      {
+        "question": "How do I change my password?",
+        "answer": "Currently, password changes need to be done by the business owner through the user creation/management system. Contact your owner if you need a password reset."
+      }
+    ]
+  },
+  {
+    "category": "Common Issues & Troubleshooting",
+    "questions": [
+      {
+        "question": "Why can't I see the Dashboard or Reports?",
+        "answer": "If you're logged in as a Cashier, you only have access to Stock and Sales pages. Dashboard, Reports, Expenses, Employees, and Settings are for Owners and Managers only."
+      },
+      {
+        "question": "Why does it say a product is out of stock when I try to sell it?",
+        "answer": "The product's quantity in inventory is zero or too low for the amount you're trying to sell. Go to Inventory to update the stock quantity first."
+      },
+      {
+        "question": "My CSV import didn't work. What should I do?",
+        "answer": "Make sure your CSV has the correct headers: name, product_code, category, price, quantity, reorder_level. Download the sample CSV to see the exact format, then try again."
+      },
+      {
+        "question": "I can't export the PDF report. What's wrong?",
+        "answer": "Make sure you're logged in and have an active internet connection. If the problem continues, try refreshing the page and clicking 'Export PDF' again."
+      },
+      {
+        "question": "How do I fix 'Failed to load' errors?",
+        "answer": "This usually means the server isn't running or you lost connection. Check that the backend is running, refresh your page, and try again. Contact your system administrator if it persists."
+      },
+      {
+        "question": "The receipt preview isn't showing. Why?",
+        "answer": "Receipt preview appears after you complete a sale or click 'View receipt' in sales history. Make sure you've finalized the transaction first."
+      },
+      {
+        "question": "Can I undo a sale I just recorded?",
+        "answer": "Currently, sales can't be deleted or reversed from the app. If you made a mistake, note it down and adjust your inventory manually or contact your manager for help."
+      }
+    ]
+  },
+  {
+    "category": "Tips & Best Practices",
+    "questions": [
+      {
+        "question": "How often should I update my inventory?",
+        "answer": "Update your inventory whenever you receive new stock. You can add individual products or use CSV import for bulk updates to keep quantities accurate."
+      },
+      {
+        "question": "What's the best way to organize my products?",
+        "answer": "Use clear, consistent category names like 'Electronics', 'Clothing', 'Food & Beverages', etc. This makes it easier to filter, search, and analyze your inventory."
+      },
+      {
+        "question": "Should I always add a customer name to sales?",
+        "answer": "Customer name is optional, but adding it helps you track repeat customers, follow up on purchases, and build better customer relationships."
+      },
+      {
+        "question": "How do I avoid running out of stock?",
+        "answer": "Set smart reorder levels for each product. Check the low stock alerts on your Dashboard regularly and restock before you hit zero."
+      },
+      {
+        "question": "What categories should I use for expenses?",
+        "answer": "Use the preset categories (Rent, Utilities, Salaries, Supplies, Marketing, Other) to keep your expenses organized. Consistent categorization makes reports more useful."
+      },
+      {
+        "question": "How can I improve my sales performance?",
+        "answer": "Check the Employees page to see which team members are performing well and learn from them. Review best-sellers in your Dashboard to focus on high-demand products."
+      },
+      {
+        "question": "When should I generate a PDF report?",
+        "answer": "Export reports monthly for your records, quarterly for deeper analysis, or whenever you need to share financial summaries with partners, accountants, or investors."
+      }
+    ]
+  },
+  {
+    "category": "Understanding Your Data",
+    "questions": [
+      {
+        "question": "What is net profit?",
+        "answer": "Net profit is your total sales minus total expenses. It shows how much money your business actually made after covering all costs."
+      },
+      {
+        "question": "What does 'Sales today' mean?",
+        "answer": "Sales today is the total revenue from all sales recorded since midnight. It resets every day and helps you track daily performance."
+      },
+      {
+        "question": "How is the best seller list calculated?",
+        "answer": "Best sellers are ranked by total quantity sold (not revenue). Products that sold the most units appear at the top, helping you identify customer favorites."
+      },
+      {
+        "question": "What's the difference between sales and revenue?",
+        "answer": "In Ancestra, 'sales' and 'revenue' mean the same thing—the total money you've earned from selling products, before subtracting expenses."
+      },
+      {
+        "question": "How do I know if my business is profitable?",
+        "answer": "Check your net profit on the Dashboard or Reports page. If it's positive, you're making more than you're spending. If negative, your expenses exceed your sales."
+      }
+    ]
+  },
+  {
+    "category": "Quick Actions & Shortcuts",
+    "questions": [
+      {
+        "question": "What's the fastest way to record a sale?",
+        "answer": "Go to Sales, type the product name or code in the search box, select it, enter quantity, click 'Add to sale', then hit the big 'Complete Sale' button at the bottom."
+      },
+      {
+        "question": "How do I quickly see today's sales?",
+        "answer": "On the Sales page, click the 'Today' button under sales history to filter and see only today's transactions."
+      },
+      {
+        "question": "Can I see this month's sales quickly?",
+        "answer": "Yes. On the Sales page, click 'This month' to filter the sales history to the current month."
+      },
+      {
+        "question": "How do I check if a product is in stock fast?",
+        "answer": "Go to Inventory and use the search bar in the product list, or start typing in the Sales page product search—both show stock levels instantly."
+      },
+      {
+        "question": "What's the quickest way to add stock?",
+        "answer": "Use the 'Update product quantity' section on the Inventory page. Search for the product, enter how many to add, and click update. Done in seconds."
+      }
+    ]
+  }
+]

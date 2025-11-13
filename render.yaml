@@ -1,0 +1,17 @@
+services:
+  # Backend API service
+  - type: web
+    name: ancestra-backend
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    envVars:
+      - key: PYTHONUNBUFFERED
+        value: 1
+      - key: MEDIA_ROOT
+        value: /app/uploads
+      - key: DATABASE_URL
+        value: sqlite:///./ancestra.db
+    healthCheckPath: /
+    autoDeploy: true

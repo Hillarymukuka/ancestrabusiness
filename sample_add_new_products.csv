@@ -1,0 +1,6 @@
+name,category,price,quantity,reorder_level
+Rice 10kg,Food,85.00,100,20
+Sugar 2kg,Food,18.00,150,30
+Floor Cleaner,Cleaning,35.00,50,15
+Tissue Paper,Household,12.00,200,40
+Laundry Soap,Cleaning,22.00,80,25
