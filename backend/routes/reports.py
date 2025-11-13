@@ -2,12 +2,8 @@ from datetime import date, datetime, timedelta
 
 from fastapi import APIRouter, Depends, Response, status
 import io
-from reportlab.lib.pagesizes import A4
+from fpdf import FPDF
 from ..utils.timezone import now_cat, format_cat_time
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Image
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.lib import colors
-from reportlab.lib.units import mm
 from .. import config as app_config
 from sqlalchemy import func
 from sqlalchemy.orm import Session
@@ -175,260 +171,159 @@ def export_report(
         db: Session = Depends(get_db),
         current_user: models.User = Depends(auth.get_current_active_user),
 ):
-        """Generate a PDF report (professional accounting style) using ReportLab and return it as an attachment."""
+        """Generate a PDF report using fpdf2."""
         summary = get_summary(db=db, _=current_user)
-
-        # Ancestra brand colors - simple & elegant palette
-        ANCESTRA_PRIMARY = colors.HexColor('#3b0270')      # Deep Purple
-        ANCESTRA_ACCENT = colors.HexColor('#6f00ff')       # Vibrant Purple
-        ANCESTRA_HIGHLIGHT = colors.HexColor('#ff4e00')    # Orange
-        ANCESTRA_LIGHT = colors.HexColor('#fff1f1')        # Light Pink/Cream
-        ANCESTRA_TEXT = colors.HexColor('#2d2d2d')         # Dark Gray
-        ANCESTRA_GRAY = colors.HexColor('#666666')         # Medium Gray
-
         issued = now_cat().strftime("%d %b %Y %H:%M CAT")
 
-        buffer = io.BytesIO()
-        doc = SimpleDocTemplate(buffer, pagesize=A4, rightMargin=20*mm, leftMargin=20*mm, topMargin=30*mm, bottomMargin=25*mm)
-        styles = getSampleStyleSheet()
-        normal = styles['Normal']
+        # Create PDF
+        pdf = FPDF()
+        pdf.add_page()
+        pdf.set_auto_page_break(auto=True, margin=20)
         
-        # Modern professional styles
-        title_style = ParagraphStyle(
-                'CustomTitle',
-                parent=styles['Heading1'],
-                alignment=1,  # Center
-                fontSize=24,
-                textColor=ANCESTRA_PRIMARY,
-                fontName='Helvetica-Bold',
-                spaceAfter=6,
-                spaceBefore=12
-        )
+        # Title
+        pdf.set_font("Arial", "B", 24)
+        pdf.set_text_color(59, 2, 112)  # Purple
+        pdf.cell(0, 15, "ANCESTRA BUSINESS REPORT", align="C", ln=True)
         
-        subtitle_style = ParagraphStyle(
-                'Subtitle',
-                parent=styles['Normal'],
-                fontSize=10,
-                textColor=ANCESTRA_GRAY,
-                alignment=1,  # Center
-                spaceAfter=20
-        )
+        # Subtitle
+        pdf.set_font("Arial", "", 10)
+        pdf.set_text_color(102, 102, 102)  # Gray
+        pdf.cell(0, 6, f"Financial Overview & Performance Analysis", align="C", ln=True)
+        pdf.cell(0, 6, issued, align="C", ln=True)
+        pdf.ln(10)
         
-        section_heading_style = ParagraphStyle(
-                'SectionHeading',
-                parent=styles['Heading2'],
-                fontSize=12,
-                textColor=ANCESTRA_PRIMARY,
-                fontName='Helvetica-Bold',
-                spaceBefore=16,
-                spaceAfter=8,
-                borderPadding=4,
-                leftIndent=0
-        )
-
-        heading = Paragraph("ANCESTRA BUSINESS REPORT", title_style)
-        subtitle = Paragraph(f"Financial Overview & Performance Analysis<br/>{issued}", subtitle_style)
-
-        flowables = [heading, subtitle, Spacer(1, 8)]
-
-        # Simple elegant summary cards
-        summary_data = [
-                [Paragraph('<para align="center"><b>Total Sales</b></para>', normal), 
-                 Paragraph('<para align="center"><b>Total Expenses</b></para>', normal), 
-                 Paragraph('<para align="center"><b>Net Profit</b></para>', normal)],
-                [Paragraph(f'<para align="center" fontSize="16" textColor="#3b0270"><b>ZMW {summary.total_sales:,.2f}</b></para>', normal), 
-                 Paragraph(f'<para align="center" fontSize="16" textColor="#3b0270"><b>ZMW {summary.total_expenses:,.2f}</b></para>', normal), 
-                 Paragraph(f'<para align="center" fontSize="16" textColor="#3b0270"><b>ZMW {summary.total_profit:,.2f}</b></para>', normal)],
-        ]
-        tbl = Table(summary_data, colWidths=[(A4[0]-40*mm)/3]*3)
-        tbl.setStyle(TableStyle([
-                ('BACKGROUND', (0,0), (-1,0), ANCESTRA_LIGHT),
-                ('TEXTCOLOR', (0,0), (-1,0), ANCESTRA_PRIMARY),
-                ('ALIGN', (0,0), (-1,-1), 'CENTER'),
-                ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
-                ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
-                ('FONTSIZE', (0,0), (-1,0), 10),
-                ('TOPPADDING', (0,0), (-1,0), 10),
-                ('BOTTOMPADDING', (0,0), (-1,0), 10),
-                ('BACKGROUND', (0,1), (-1,1), colors.white),
-                ('TOPPADDING', (0,1), (-1,1), 14),
-                ('BOTTOMPADDING', (0,1), (-1,1), 14),
-                ('BOX', (0,0), (-1,-1), 1.5, ANCESTRA_ACCENT),
-                ('LINEBELOW', (0,0), (-1,0), 1, ANCESTRA_ACCENT),
-        ]))
-        flowables.append(tbl)
-        flowables.append(Spacer(1, 20))
-
-        # Period summaries with modern styling
-        flowables.append(Paragraph('Period Summaries', section_heading_style))
-        ps_data = [[ 'Period', 'Sales', 'Expenses', 'Profit' ]]
+        # Summary cards
+        pdf.set_font("Arial", "B", 12)
+        pdf.set_text_color(59, 2, 112)
+        y_pos = pdf.get_y()
+        
+        # Total Sales
+        pdf.set_xy(20, y_pos)
+        pdf.cell(55, 8, "Total Sales", border=1, align="C")
+        pdf.set_xy(20, y_pos + 8)
+        pdf.set_font("Arial", "B", 14)
+        pdf.cell(55, 10, f"ZMW {summary.total_sales:,.2f}", border=1, align="C")
+        
+        # Total Expenses
+        pdf.set_xy(75, y_pos)
+        pdf.set_font("Arial", "B", 12)
+        pdf.cell(60, 8, "Total Expenses", border=1, align="C")
+        pdf.set_xy(75, y_pos + 8)
+        pdf.set_font("Arial", "B", 14)
+        pdf.cell(60, 10, f"ZMW {summary.total_expenses:,.2f}", border=1, align="C")
+        
+        # Net Profit
+        pdf.set_xy(135, y_pos)
+        pdf.set_font("Arial", "B", 12)
+        pdf.cell(55, 8, "Net Profit", border=1, align="C")
+        pdf.set_xy(135, y_pos + 8)
+        pdf.set_font("Arial", "B", 14)
+        pdf.cell(55, 10, f"ZMW {summary.total_profit:,.2f}", border=1, align="C")
+        
+        pdf.set_y(y_pos + 25)
+        
+        # Period Summaries
+        pdf.set_font("Arial", "B", 12)
+        pdf.set_text_color(59, 2, 112)
+        pdf.cell(0, 8, "Period Summaries", ln=True)
+        
+        pdf.set_font("Arial", "B", 10)
+        pdf.set_fill_color(111, 0, 255)
+        pdf.set_text_color(255, 255, 255)
+        pdf.cell(50, 8, "Period", border=1, fill=True)
+        pdf.cell(45, 8, "Sales", border=1, fill=True, align="C")
+        pdf.cell(45, 8, "Expenses", border=1, fill=True, align="C")
+        pdf.cell(50, 8, "Profit", border=1, fill=True, align="C", ln=True)
+        
+        pdf.set_font("Arial", "", 10)
+        pdf.set_text_color(0, 0, 0)
         for p in summary.period_summaries:
-                ps_data.append([p.label, f"ZMW {p.sales:,.2f}", f"ZMW {p.expenses:,.2f}", f"ZMW {p.profit:,.2f}"])
-        ps_tbl = Table(ps_data, colWidths=[50*mm, 50*mm, 50*mm, 50*mm])
-        ps_tbl.setStyle(TableStyle([
-                ('BACKGROUND', (0,0), (-1,0), ANCESTRA_ACCENT),
-                ('TEXTCOLOR', (0,0), (-1,0), colors.white),
-                ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
-                ('FONTSIZE', (0,0), (-1,0), 10),
-                ('ALIGN', (0,0), (-1,-1), 'CENTER'),
-                ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
-                ('TOPPADDING', (0,0), (-1,0), 8),
-                ('BOTTOMPADDING', (0,0), (-1,0), 8),
-                ('BACKGROUND', (0,1), (0,-1), ANCESTRA_LIGHT),
-                ('GRID', (0,0), (-1,-1), 0.5, ANCESTRA_GRAY),
-                ('ROWBACKGROUNDS', (1,1), (-1,-1), [colors.white, ANCESTRA_LIGHT]),
-                ('TOPPADDING', (0,1), (-1,-1), 6),
-                ('BOTTOMPADDING', (0,1), (-1,-1), 6),
-        ]))
-        flowables.append(ps_tbl)
-        flowables.append(Spacer(1, 16))
-
-        # Sales vs expenses table (last 7 days) with modern styling
-        flowables.append(Paragraph('Sales vs Expenses (Last 7 Days)', section_heading_style))
-        sev_data = [[ 'Date', 'Sales', 'Expenses', 'Profit' ]]
+            pdf.cell(50, 8, p.label, border=1)
+            pdf.cell(45, 8, f"ZMW {p.sales:,.2f}", border=1, align="C")
+            pdf.cell(45, 8, f"ZMW {p.expenses:,.2f}", border=1, align="C")
+            pdf.cell(50, 8, f"ZMW {p.profit:,.2f}", border=1, align="C", ln=True)
+        
+        pdf.ln(8)
+        
+        # Sales vs Expenses (Last 7 Days)
+        pdf.set_font("Arial", "B", 12)
+        pdf.set_text_color(59, 2, 112)
+        pdf.cell(0, 8, "Sales vs Expenses (Last 7 Days)", ln=True)
+        
+        pdf.set_font("Arial", "B", 10)
+        pdf.set_fill_color(111, 0, 255)
+        pdf.set_text_color(255, 255, 255)
+        pdf.cell(50, 8, "Date", border=1, fill=True)
+        pdf.cell(45, 8, "Sales", border=1, fill=True, align="C")
+        pdf.cell(45, 8, "Expenses", border=1, fill=True, align="C")
+        pdf.cell(50, 8, "Profit", border=1, fill=True, align="C", ln=True)
+        
+        pdf.set_font("Arial", "", 10)
+        pdf.set_text_color(0, 0, 0)
         for pt in summary.sales_vs_expenses:
-                profit_color = '#059669' if pt.profit >= 0 else '#dc2626'
-                sev_data.append([
-                        pt.period.strftime('%d %b %Y'), 
-                        f"ZMW {pt.sales:,.2f}", 
-                        f"ZMW {pt.expenses:,.2f}", 
-                        f"ZMW {pt.profit:,.2f}"
-                ])
-        sev_tbl = Table(sev_data, colWidths=[50*mm, 50*mm, 50*mm, 50*mm])
-        sev_tbl.setStyle(TableStyle([
-                ('BACKGROUND', (0,0), (-1,0), ANCESTRA_ACCENT),
-                ('TEXTCOLOR', (0,0), (-1,0), colors.white),
-                ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
-                ('FONTSIZE', (0,0), (-1,0), 10),
-                ('ALIGN', (0,0), (-1,-1), 'CENTER'),
-                ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
-                ('TOPPADDING', (0,0), (-1,0), 8),
-                ('BOTTOMPADDING', (0,0), (-1,0), 8),
-                ('BACKGROUND', (0,1), (0,-1), ANCESTRA_LIGHT),
-                ('GRID', (0,0), (-1,-1), 0.5, ANCESTRA_GRAY),
-                ('ROWBACKGROUNDS', (1,1), (-1,-1), [colors.white, ANCESTRA_LIGHT]),
-                ('TOPPADDING', (0,1), (-1,-1), 6),
-                ('BOTTOMPADDING', (0,1), (-1,-1), 6),
-        ]))
-        flowables.append(sev_tbl)
-        flowables.append(Spacer(1, 16))
-
-        # Best sellers with modern styling
-        flowables.append(Paragraph('Best Selling Products', section_heading_style))
-        bs_data = [[ 'Product', 'Unit Price', 'Qty Sold', 'Revenue', 'Status' ]]
+            pdf.cell(50, 8, pt.period.strftime('%d %b %Y'), border=1)
+            pdf.cell(45, 8, f"ZMW {pt.sales:,.2f}", border=1, align="C")
+            pdf.cell(45, 8, f"ZMW {pt.expenses:,.2f}", border=1, align="C")
+            pdf.cell(50, 8, f"ZMW {pt.profit:,.2f}", border=1, align="C", ln=True)
+        
+        pdf.ln(8)
+        
+        # Best Sellers
+        pdf.set_font("Arial", "B", 12)
+        pdf.set_text_color(59, 2, 112)
+        pdf.cell(0, 8, "Best Selling Products", ln=True)
+        
+        pdf.set_font("Arial", "B", 10)
+        pdf.set_fill_color(111, 0, 255)
+        pdf.set_text_color(255, 255, 255)
+        pdf.cell(60, 8, "Product", border=1, fill=True)
+        pdf.cell(30, 8, "Price", border=1, fill=True, align="C")
+        pdf.cell(25, 8, "Qty", border=1, fill=True, align="C")
+        pdf.cell(40, 8, "Revenue", border=1, fill=True, align="C")
+        pdf.cell(35, 8, "Status", border=1, fill=True, align="C", ln=True)
+        
+        pdf.set_font("Arial", "", 10)
+        pdf.set_text_color(0, 0, 0)
         for b in summary.best_sellers:
-                status_color = '#059669' if b.status == 'In stock' else '#dc2626'
-                bs_data.append([
-                        b.product_name, 
-                        f"ZMW {b.unit_price:,.2f}", 
-                        str(b.total_quantity), 
-                        f"ZMW {b.total_revenue:,.2f}", 
-                        b.status
-                ])
-        bs_tbl = Table(bs_data, colWidths=[60*mm, 35*mm, 30*mm, 40*mm, 35*mm])
-        bs_tbl.setStyle(TableStyle([
-                ('BACKGROUND', (0,0), (-1,0), ANCESTRA_ACCENT),
-                ('TEXTCOLOR', (0,0), (-1,0), colors.white),
-                ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
-                ('FONTSIZE', (0,0), (-1,0), 10),
-                ('ALIGN', (0,0), (-1,-1), 'CENTER'),
-                ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
-                ('ALIGN', (0,1), (0,-1), 'LEFT'),  # Product names left-aligned
-                ('TOPPADDING', (0,0), (-1,0), 8),
-                ('BOTTOMPADDING', (0,0), (-1,0), 8),
-                ('GRID', (0,0), (-1,-1), 0.5, ANCESTRA_GRAY),
-                ('ROWBACKGROUNDS', (0,1), (-1,-1), [colors.white, ANCESTRA_LIGHT]),
-                ('TOPPADDING', (0,1), (-1,-1), 6),
-                ('BOTTOMPADDING', (0,1), (-1,-1), 6),
-        ]))
-        flowables.append(bs_tbl)
-        flowables.append(Spacer(1, 16))
-
-        # Low stock with modern styling
-        flowables.append(Paragraph('Low Stock Items', section_heading_style))
+            pdf.cell(60, 8, b.product_name[:25], border=1)
+            pdf.cell(30, 8, f"ZMW {b.unit_price:,.2f}", border=1, align="C")
+            pdf.cell(25, 8, str(b.total_quantity), border=1, align="C")
+            pdf.cell(40, 8, f"ZMW {b.total_revenue:,.2f}", border=1, align="C")
+            pdf.cell(35, 8, b.status, border=1, align="C", ln=True)
+        
+        pdf.ln(8)
+        
+        # Low Stock
+        pdf.set_font("Arial", "B", 12)
+        pdf.set_text_color(59, 2, 112)
+        pdf.cell(0, 8, "Low Stock Items", ln=True)
+        
+        pdf.set_font("Arial", "", 10)
         if summary.low_stock:
-                low_stock_style = ParagraphStyle(
-                        'LowStock',
-                        parent=normal,
-                        fontSize=10,
-                        textColor=ANCESTRA_HIGHLIGHT,
-                        leftIndent=10
-                )
-                low_stock_text = ', '.join(summary.low_stock)
-                flowables.append(Paragraph(low_stock_text, low_stock_style))
+            pdf.set_text_color(255, 78, 0)  # Orange
+            pdf.multi_cell(0, 6, ', '.join(summary.low_stock))
         else:
-                no_low_stock_style = ParagraphStyle(
-                        'NoLowStock',
-                        parent=normal,
-                        fontSize=10,
-                        textColor=colors.HexColor('#059669'),
-                        leftIndent=10
-                )
-                flowables.append(Paragraph('✓ All products are adequately stocked', no_low_stock_style))
-        flowables.append(Spacer(1, 16))
-
-        # Summary stats with modern styling
-        stats_style = ParagraphStyle(
-                'Stats',
-                parent=normal,
-                fontSize=10,
-                textColor=ANCESTRA_TEXT,
-                leftIndent=10,
-                spaceAfter=4
-        )
-        flowables.append(Paragraph(f"<b>Total Orders:</b> {summary.total_orders}", stats_style))
-        flowables.append(Paragraph(f"<b>Sales Today:</b> ZMW {summary.sales_today:,.2f}", stats_style))
-
-        # Simple elegant header/footer
-        def _draw_page(canvas, doc_obj):
-            canvas.saveState()
-            width, height = A4
-            
-            # Top accent stripe - simple elegant design
-            canvas.setFillColor(ANCESTRA_ACCENT)
-            canvas.rect(0, height - 4, width, 4, stroke=0, fill=1)
-
-            # Header text - company name centered
-            canvas.setFillColor(ANCESTRA_PRIMARY)
-            canvas.setFont('Helvetica-Bold', 10)
-            canvas.drawCentredString(width / 2, height - 18, "ANCESTRA BUSINESS")
-            
-            # Bottom accent stripe
-            canvas.setFillColor(ANCESTRA_ACCENT)
-            canvas.rect(0, 0, width, 4, stroke=0, fill=1)
-
-            # Footer text
-            canvas.setFillColor(ANCESTRA_GRAY)
-            canvas.setFont('Helvetica', 8)
-            try:
-                settings = db.query(models.ReceiptSettings).first()
-                footer_msg = str(settings.footer_message) if settings and getattr(settings, 'footer_message', None) else 'Powered by Ancestra Business Management System'
-            except Exception:
-                footer_msg = 'Powered by Ancestra Business Management System'
-            
-            canvas.drawString(20*mm, 8*mm, footer_msg)
-            
-            # Page number - elegant style
-            canvas.setFillColor(ANCESTRA_PRIMARY)
-            canvas.setFont('Helvetica', 8)
-            page_num_text = f"Page {doc_obj.page}"
-            canvas.drawRightString(width - 20*mm, 8*mm, page_num_text)
-
-            canvas.restoreState()
-
-        doc.build(flowables, onFirstPage=_draw_page, onLaterPages=_draw_page)
-        pdf_bytes = buffer.getvalue()
-        buffer.close()
+            pdf.set_text_color(5, 150, 105)  # Green
+            pdf.cell(0, 6, "All products are adequately stocked", ln=True)
+        
+        pdf.ln(6)
+        
+        # Additional Stats
+        pdf.set_font("Arial", "", 10)
+        pdf.set_text_color(0, 0, 0)
+        pdf.cell(0, 6, f"Total Orders: {summary.total_orders}", ln=True)
+        pdf.cell(0, 6, f"Sales Today: ZMW {summary.sales_today:,.2f}", ln=True)
+        
+        # Get PDF content
+        pdf_content = bytes(pdf.output())
 
         filename = f"ancestra_report_{now_cat().strftime('%Y%m%d')}.pdf"
         return Response(
-                content=pdf_bytes, 
+                content=pdf_content, 
                 media_type="application/pdf", 
                 headers={
                         "Content-Disposition": f"attachment; filename={filename}",
-                        "Access-Control-Allow-Origin": "*",
-                        "Access-Control-Allow-Methods": "GET, OPTIONS",
-                        "Access-Control-Allow-Headers": "*",
+                        "Access-Control-Expose-Headers": "Content-Disposition",
                 }, 
                 status_code=status.HTTP_200_OK
         )

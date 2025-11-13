@@ -2,12 +2,7 @@ from datetime import date
 from io import BytesIO
 
 from fastapi import APIRouter, Depends, Response, HTTPException, status
-from reportlab.lib.pagesizes import A4
-from reportlab.lib.units import mm
-from reportlab.lib import colors
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.lib.enums import TA_RIGHT, TA_CENTER
+from fpdf import FPDF
 from sqlalchemy.orm import Session
 
 from .. import auth, models, schemas
@@ -73,182 +68,122 @@ def generate_quotation_pdf(
     
     # Get company settings
     settings = db.query(models.ReceiptSettings).first()
-    company_name = settings.company_name if settings and settings.company_name else "Your Company Inc."
-    company_address = settings.company_address if settings and settings.company_address else "1234 Company St, Company Town, ST 12345"
+    company_name = str(settings.company_name) if settings and settings.company_name else "Your Company Inc."
+    company_address = str(settings.company_address) if settings and settings.company_address else "1234 Company St, Company Town, ST 12345"
     
     # Generate quote number
     quote_number = generate_quote_number(db)
     
-    # Create PDF
-    buffer = BytesIO()
-    doc = SimpleDocTemplate(buffer, pagesize=A4, topMargin=20*mm, bottomMargin=20*mm)
-    elements = []
-    styles = getSampleStyleSheet()
+    # Create PDF with FPDF
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_auto_page_break(auto=True, margin=20)
     
-    # Custom styles
-    title_style = ParagraphStyle(
-        'CustomTitle',
-        parent=styles['Heading1'],
-        fontSize=32,
-        textColor=colors.HexColor('#333333'),
-        alignment=TA_RIGHT,
-        spaceAfter=30,
-    )
+    # Company Header
+    pdf.set_font("Arial", "B", 12)
+    pdf.cell(0, 8, company_name, ln=True)
+    pdf.set_font("Arial", "", 10)
+    pdf.multi_cell(0, 5, company_address)
+    pdf.ln(5)
     
-    header_style = ParagraphStyle(
-        'HeaderStyle',
-        parent=styles['Normal'],
-        fontSize=10,
-        textColor=colors.HexColor('#333333'),
-    )
+    # QUOTE Title
+    pdf.set_font("Arial", "B", 32)
+    pdf.cell(0, 15, "QUOTE", align="R", ln=True)
+    pdf.ln(5)
     
-    bold_style = ParagraphStyle(
-        'BoldStyle',
-        parent=styles['Normal'],
-        fontSize=10,
-        textColor=colors.HexColor('#333333'),
-        fontName='Helvetica-Bold',
-    )
+    # Bill To and Quote Details (Two columns)
+    pdf.set_font("Arial", "B", 10)
+    y_position = pdf.get_y()
     
-    # Company header on left, Upload Logo placeholder on right
-    header_data = [
-        [
-            Paragraph(f"<b>{company_name}</b><br/>{company_address}", header_style),
-            Paragraph("", header_style),  # Placeholder for logo
-        ]
-    ]
-    
-    header_table = Table(header_data, colWidths=[100*mm, 80*mm])
-    header_table.setStyle(TableStyle([
-        ('VALIGN', (0, 0), (-1, -1), 'TOP'),
-        ('ALIGN', (1, 0), (1, 0), 'RIGHT'),
-    ]))
-    elements.append(header_table)
-    elements.append(Spacer(1, 10*mm))
-    
-    # QUOTE title
-    elements.append(Paragraph("QUOTE", title_style))
-    elements.append(Spacer(1, 10*mm))
-    
-    # Bill To and Quote details
-    bill_to_customer = f"<b>Customer Name</b><br/>{quotation.customer_name or ''}"
+    # Left column - Bill To
+    pdf.set_xy(10, y_position)
+    pdf.cell(90, 6, "Bill To", ln=True)
+    pdf.set_font("Arial", "", 10)
+    pdf.set_x(10)
+    pdf.cell(90, 6, quotation.customer_name, ln=True)
     if quotation.customer_address:
-        bill_to_customer += f"<br/>{quotation.customer_address}"
+        pdf.set_x(10)
+        pdf.cell(90, 6, quotation.customer_address, ln=True)
     if quotation.customer_city:
-        bill_to_customer += f"<br/>{quotation.customer_city}"
+        pdf.set_x(10)
+        pdf.cell(90, 6, quotation.customer_city, ln=True)
     
-    info_data = [
-        [
-            Paragraph("<b>Bill To</b>", bold_style),
-            "",
-            Paragraph("<b>Quote #</b>", bold_style),
-            Paragraph(quote_number, header_style),
-        ],
-        [
-            Paragraph(quotation.customer_name, header_style),
-            "",
-            Paragraph("<b>Quote date</b>", bold_style),
-            Paragraph(quotation.quote_date.strftime('%d-%m-%Y'), header_style),
-        ],
-        [
-            Paragraph(quotation.customer_address or "", header_style),
-            "",
-            Paragraph("<b>Due date</b>", bold_style),
-            Paragraph(quotation.due_date.strftime('%d-%m-%Y'), header_style),
-        ],
-        [
-            Paragraph(quotation.customer_city or "", header_style),
-            "",
-            "",
-            "",
-        ],
-    ]
+    # Right column - Quote details
+    pdf.set_xy(110, y_position)
+    pdf.set_font("Arial", "B", 10)
+    pdf.cell(40, 6, "Quote #", align="L")
+    pdf.set_font("Arial", "", 10)
+    pdf.cell(0, 6, quote_number, align="R", ln=True)
     
-    info_table = Table(info_data, colWidths=[70*mm, 30*mm, 40*mm, 40*mm])
-    info_table.setStyle(TableStyle([
-        ('VALIGN', (0, 0), (-1, -1), 'TOP'),
-        ('ALIGN', (2, 0), (3, -1), 'RIGHT'),
-    ]))
-    elements.append(info_table)
-    elements.append(Spacer(1, 15*mm))
+    pdf.set_x(110)
+    pdf.set_font("Arial", "B", 10)
+    pdf.cell(40, 6, "Quote date", align="L")
+    pdf.set_font("Arial", "", 10)
+    pdf.cell(0, 6, quotation.quote_date.strftime('%d-%m-%Y'), align="R", ln=True)
     
-    # Items table
-    items_data = [
-        [
-            Paragraph("<b>QTY</b>", bold_style),
-            Paragraph("<b>Description</b>", bold_style),
-            Paragraph("<b>Unit Price</b>", bold_style),
-            Paragraph("<b>Amount</b>", bold_style),
-        ]
-    ]
+    pdf.set_x(110)
+    pdf.set_font("Arial", "B", 10)
+    pdf.cell(40, 6, "Due date", align="L")
+    pdf.set_font("Arial", "", 10)
+    pdf.cell(0, 6, quotation.due_date.strftime('%d-%m-%Y'), align="R", ln=True)
     
+    pdf.ln(10)
+    
+    # Items table header
+    pdf.set_font("Arial", "B", 10)
+    pdf.set_fill_color(240, 240, 240)
+    pdf.cell(20, 8, "QTY", border=1, fill=True)
+    pdf.cell(95, 8, "Description", border=1, fill=True)
+    pdf.cell(35, 8, "Unit Price", border=1, align="R", fill=True)
+    pdf.cell(40, 8, "Amount", border=1, align="R", fill=True, ln=True)
+    
+    # Items table rows
+    pdf.set_font("Arial", "", 10)
     for item in quote_items:
-        items_data.append([
-            Paragraph(f"{item['quantity']:.2f}", header_style),
-            Paragraph(item['description'], header_style),
-            Paragraph(f"ZMW {item['unit_price']:.2f}", header_style),
-            Paragraph(f"ZMW {item['amount']:.2f}", header_style),
-        ])
+        pdf.cell(20, 8, f"{item['quantity']:.2f}", border=1)
+        pdf.cell(95, 8, item['description'][:40], border=1)
+        pdf.cell(35, 8, f"ZMW {item['unit_price']:.2f}", border=1, align="R")
+        pdf.cell(40, 8, f"ZMW {item['amount']:.2f}", border=1, align="R", ln=True)
     
-    items_table = Table(items_data, colWidths=[25*mm, 85*mm, 35*mm, 35*mm])
-    items_table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.white),
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
-        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
-        ('ALIGN', (2, 0), (3, -1), 'RIGHT'),
-        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-        ('FONTSIZE', (0, 0), (-1, -1), 10),
-        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-        ('TOPPADDING', (0, 1), (-1, -1), 6),
-        ('BOTTOMPADDING', (0, 1), (-1, -1), 6),
-        ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
-    ]))
-    elements.append(items_table)
-    elements.append(Spacer(1, 10*mm))
+    pdf.ln(5)
     
     # Totals section
-    totals_data = [
-        ["", "", Paragraph("<b>Subtotal</b>", bold_style), Paragraph(f"ZMW {subtotal:.2f}", header_style)],
-        ["", "", Paragraph(f"<b>Sales Tax ({quotation.tax_rate}%)</b>", bold_style), Paragraph(f"ZMW {tax_amount:.2f}", header_style)],
-        ["", "", Paragraph("<b>Total (ZMW)</b>", bold_style), Paragraph(f"<b>ZMW {total:.2f}</b>", bold_style)],
-    ]
+    pdf.set_font("Arial", "B", 10)
+    pdf.cell(150, 6, "Subtotal", align="R")
+    pdf.set_font("Arial", "", 10)
+    pdf.cell(40, 6, f"ZMW {subtotal:.2f}", align="R", ln=True)
     
-    totals_table = Table(totals_data, colWidths=[60*mm, 50*mm, 40*mm, 30*mm])
-    totals_table.setStyle(TableStyle([
-        ('ALIGN', (2, 0), (3, -1), 'RIGHT'),
-        ('LINEABOVE', (2, 2), (3, 2), 1, colors.black),
-        ('TOPPADDING', (0, 0), (-1, -1), 6),
-        ('BOTTOMPADDING', (0, 0), (-1, -1), 6),
-    ]))
-    elements.append(totals_table)
-    elements.append(Spacer(1, 15*mm))
+    pdf.set_font("Arial", "B", 10)
+    pdf.cell(150, 6, f"Sales Tax ({quotation.tax_rate}%)", align="R")
+    pdf.set_font("Arial", "", 10)
+    pdf.cell(40, 6, f"ZMW {tax_amount:.2f}", align="R", ln=True)
+    
+    pdf.set_font("Arial", "B", 11)
+    pdf.cell(150, 8, "Total (ZMW)", align="R")
+    pdf.cell(40, 8, f"ZMW {total:.2f}", align="R", ln=True)
+    
+    pdf.ln(10)
     
     # Terms and Conditions
     if quotation.terms:
-        elements.append(Paragraph("<b>Terms and Conditions</b>", bold_style))
-        elements.append(Spacer(1, 3*mm))
-        elements.append(Paragraph(quotation.terms, header_style))
-        company_name_str = str(company_name) if company_name else "Your Company"
-        elements.append(Paragraph(f"Please make checks payable to: {company_name_str}", header_style))
-        elements.append(Spacer(1, 20*mm))
+        pdf.set_font("Arial", "B", 10)
+        pdf.cell(0, 6, "Terms and Conditions", ln=True)
+        pdf.set_font("Arial", "", 10)
+        pdf.multi_cell(0, 5, quotation.terms)
+        pdf.ln(2)
+        pdf.cell(0, 5, f"Please make checks payable to: {company_name}", ln=True)
+        pdf.ln(10)
     
     # Signature line
-    sig_data = [
-        ["", Paragraph("_" * 50, header_style)],
-        ["", Paragraph("customer signature", header_style)],
-    ]
-    sig_table = Table(sig_data, colWidths=[90*mm, 90*mm])
-    sig_table.setStyle(TableStyle([
-        ('ALIGN', (1, 0), (1, -1), 'RIGHT'),
-        ('VALIGN', (0, 0), (-1, -1), 'BOTTOM'),
-    ]))
-    elements.append(sig_table)
+    pdf.ln(10)
+    pdf.set_x(110)
+    pdf.cell(80, 6, "_" * 50, align="R", ln=True)
+    pdf.set_x(110)
+    pdf.set_font("Arial", "", 9)
+    pdf.cell(80, 5, "customer signature", align="R", ln=True)
     
-    # Build PDF
-    doc.build(elements)
-    
-    pdf_content = buffer.getvalue()
-    buffer.close()
+    # Get PDF content
+    pdf_content = bytes(pdf.output())
     
     # Return PDF as response using the quote number format
     filename = f"{quote_number}.pdf"
