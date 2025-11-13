@@ -21,7 +21,7 @@ const Sidebar = () => {
   const itemsToShow = user && user.role === 'cashier' ? navItems.filter((i) => !hiddenForCashier.has(i.label)) : navItems
 
   return (
-    <aside className="w-20 lg:w-64 bg-primary text-white flex flex-col">
+    <aside className="w-20 lg:w-64 bg-primary text-white flex flex-col sticky top-0 h-screen">
       {/* Header: show icon only on mobile, full text on desktop */}
       <div className="px-3 lg:px-6 py-8 border-b border-white/10">
         <h1 className="font-heading text-2xl hidden lg:block">Ancestra</h1>
