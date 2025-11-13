@@ -11,10 +11,16 @@ RUN apt-get update && apt-get install -y \
     make \
     libpq-dev \
     python3-dev \
+    libjpeg-dev \
+    zlib1g-dev \
+    libfreetype6-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements file
 COPY backend/requirements.txt .
+
+# Upgrade pip and install wheel
+RUN pip install --upgrade pip setuptools wheel
 
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
