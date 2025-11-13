@@ -19,6 +19,7 @@ app = FastAPI(title="Ancestra Business API", version="0.1.0")
 allowed_origins = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
+    "https://ancestrabusiness.pages.dev",  # Add your Cloudflare Pages URL here
 ]
 
 app.add_middleware(
