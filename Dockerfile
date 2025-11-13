@@ -17,7 +17,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy backend code
 COPY backend/ ./backend/
-COPY ancestra.db ./ancestra.db
 
 # Create uploads directory
 RUN mkdir -p uploads/logos uploads/expense_receipts
