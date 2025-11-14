@@ -163,9 +163,9 @@ const Quotations = () => {
         let filename = `quote_${form.customer_name.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`
         
         if (contentDisposition) {
-          const filenameMatch = contentDisposition.match(/filename="?(.+)"?/)
+          const filenameMatch = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/)
           if (filenameMatch && filenameMatch[1]) {
-            filename = filenameMatch[1]
+            filename = filenameMatch[1].replace(/['"]/g, '')
           }
         }
         
