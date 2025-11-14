@@ -48,6 +48,13 @@ const Sidebar = () => {
           </NavLink>
         ))}
       </nav>
+      
+      {/* Footer branding */}
+      <div className="px-3 lg:px-6 py-4 border-t border-white/10">
+        <p className="text-xs text-white/60 text-center lg:text-left">
+          Built by Ancestro©2025
+        </p>
+      </div>
     </aside>
   )
 }
