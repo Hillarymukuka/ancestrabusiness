@@ -69,7 +69,7 @@ def generate_quotation_pdf(
     # Get company settings
     settings = db.query(models.ReceiptSettings).first()
     company_name = str(settings.company_name) if settings and settings.company_name else "Your Company Inc."
-    company_address = str(settings.company_address) if settings and settings.company_address else "1234 Company St, Company Town, ST 12345"
+    company_address = str(settings.company_address) if settings and settings.company_address else "Plot 6318 Elm Road Woodlands, Lusaka Zambia"
     
     # Generate quote number
     quote_number = generate_quote_number(db)
