@@ -51,8 +51,8 @@ const Sidebar = () => {
       
       {/* Footer branding */}
       <div className="px-3 lg:px-6 py-4 border-t border-white/10">
-        <p className="text-xs text-white/60 text-center lg:text-left">
-          Built by Ancestro©2025
+        <p className="text-[9px] lg:text-xs text-white/60 text-center leading-tight">
+          Built by Ancestro
         </p>
       </div>
     </aside>
