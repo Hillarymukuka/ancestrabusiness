@@ -15,14 +15,54 @@ const BestSellersTable = ({ products = [] }) => {
   }
 
   return (
-    <div className="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm">
+    <div className="rounded-xl sm:rounded-2xl border border-slate-100 bg-white p-4 sm:p-6 shadow-sm">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h3 className="font-heading text-lg text-slate-900">Best selling items</h3>
-          <p className="text-sm text-slate-500">Top performers ranked by quantity sold</p>
+          <h3 className="font-heading text-base sm:text-lg text-slate-900">Best selling items</h3>
+          <p className="text-xs sm:text-sm text-slate-500">Top performers ranked by quantity sold</p>
         </div>
       </div>
-      <div className="mt-6 overflow-x-auto">
+      
+      {/* Mobile: Card layout */}
+      <div className="mt-4 sm:hidden space-y-3">
+        {products.map((product, index) => (
+          <div key={product.product_id} className="border border-slate-100 rounded-lg p-3 bg-slate-50">
+            <div className="flex items-start justify-between mb-2">
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2">
+                  <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-semibold flex items-center justify-center">
+                    {index + 1}
+                  </span>
+                  <p className="font-medium text-slate-800 truncate">{product.product_name}</p>
+                </div>
+                <p className="text-xs text-slate-400 mt-1 ml-8">{formatCurrency(product.unit_price)}</p>
+              </div>
+              <span
+                className={`flex-shrink-0 rounded-full px-2 py-0.5 text-xs font-semibold ${
+                  product.status === 'In stock'
+                    ? 'bg-emerald-50 text-emerald-600'
+                    : 'bg-slate-200 text-slate-600'
+                }`}
+              >
+                {product.status}
+              </span>
+            </div>
+            <div className="flex justify-between text-sm mt-2 pt-2 border-t border-slate-200">
+              <div>
+                <p className="text-xs text-slate-400">Sold</p>
+                <p className="font-semibold text-slate-800">{product.total_quantity}</p>
+              </div>
+              <div className="text-right">
+                <p className="text-xs text-slate-400">Revenue</p>
+                <p className="font-semibold text-slate-800">{formatCurrency(product.total_revenue)}</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Desktop: Table layout */}
+      <div className="mt-6 overflow-x-auto hidden sm:block">
         <table className="min-w-full text-sm text-slate-600">
           <thead className="text-left text-xs font-semibold uppercase tracking-widest text-slate-400">
             <tr>

@@ -1,8 +1,11 @@
-import { createContext, useContext, useEffect, useMemo, useState } from 'react'
+import { createContext, useContext, useEffect, useMemo, useState, useCallback, useRef } from 'react'
 
 import api from '../utils/api.js'
 
 const AuthContext = createContext(undefined)
+
+// Auto-logout after 30 minutes of inactivity
+const INACTIVITY_TIMEOUT = 30 * 60 * 1000 // 30 minutes in milliseconds
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
@@ -12,6 +15,53 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(() => localStorage.getItem('ancestra_token'))
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+  const inactivityTimerRef = useRef(null)
+
+  // Reset inactivity timer
+  const resetInactivityTimer = useCallback(() => {
+    if (!token) return
+
+    // Clear existing timer
+    if (inactivityTimerRef.current) {
+      clearTimeout(inactivityTimerRef.current)
+    }
+
+    // Set new timer
+    inactivityTimerRef.current = setTimeout(() => {
+      console.log('User inactive for 30 minutes. Logging out...')
+      logout()
+      alert('You have been logged out due to inactivity for security reasons.')
+    }, INACTIVITY_TIMEOUT)
+  }, [token])
+
+  // Track user activity
+  useEffect(() => {
+    if (!token) return
+
+    // Activity events to track
+    const events = ['mousedown', 'keydown', 'scroll', 'touchstart', 'click']
+
+    // Reset timer on any activity
+    const handleActivity = () => resetInactivityTimer()
+
+    // Add event listeners
+    events.forEach(event => {
+      window.addEventListener(event, handleActivity)
+    })
+
+    // Initialize timer
+    resetInactivityTimer()
+
+    // Cleanup
+    return () => {
+      events.forEach(event => {
+        window.removeEventListener(event, handleActivity)
+      })
+      if (inactivityTimerRef.current) {
+        clearTimeout(inactivityTimerRef.current)
+      }
+    }
+  }, [token, resetInactivityTimer])
 
   useEffect(() => {
     if (token) {

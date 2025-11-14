@@ -136,34 +136,34 @@ const Settings = () => {
         <p className="text-sm text-slate-500">Manage account preferences and team access</p>
       </div>
 
-      <section className="rounded-xl bg-white p-6 shadow-sm">
-        <h3 className="font-heading text-lg text-primary">Profile</h3>
+      <section className="rounded-lg sm:rounded-xl bg-white p-4 sm:p-6 shadow-sm">
+        <h3 className="font-heading text-base sm:text-lg text-primary">Profile</h3>
         {user ? (
-          <ul className="mt-3 text-sm text-slate-600">
+          <ul className="mt-3 text-xs sm:text-sm text-slate-600 space-y-1">
             <li><strong>Name:</strong> {user.full_name}</li>
             <li><strong>Username:</strong> {user.username}</li>
             <li><strong>Role:</strong> {user.role}</li>
           </ul>
         ) : (
-          <p className="text-sm text-slate-500">Sign in to view profile details.</p>
+          <p className="text-xs sm:text-sm text-slate-500">Sign in to view profile details.</p>
         )}
       </section>
 
-      <section className="rounded-xl bg-white p-6 shadow-sm">
+      <section className="rounded-lg sm:rounded-xl bg-white p-4 sm:p-6 shadow-sm">
         <div className="flex items-center justify-between">
-          <h3 className="font-heading text-lg text-primary">Invite team member</h3>
+          <h3 className="font-heading text-base sm:text-lg text-primary">Invite team member</h3>
           {!canManage ? <span className="text-xs font-medium uppercase text-slate-400">Owner only</span> : null}
         </div>
-        {message ? <p className="mt-3 text-sm text-green-600">{message}</p> : null}
-        {error ? <p className="mt-3 text-sm text-red-600">{error}</p> : null}
-        <form onSubmit={handleSubmit} className="mt-4 grid gap-4 md:grid-cols-2">
+        {message ? <p className="mt-3 text-xs sm:text-sm text-green-600">{message}</p> : null}
+        {error ? <p className="mt-3 text-xs sm:text-sm text-red-600">{error}</p> : null}
+        <form onSubmit={handleSubmit} className="mt-3 sm:mt-4 grid gap-3 sm:gap-4 md:grid-cols-2">
           <input
             required
             type="text"
             placeholder="Username"
             value={form.username}
             onChange={(event) => setForm((prev) => ({ ...prev, username: event.target.value }))}
-            className="rounded-md border border-slate-200 px-3 py-2 text-sm focus:border-primary focus:outline-none"
+            className="rounded-md border border-slate-200 px-3 py-2.5 text-sm sm:text-base focus:border-primary focus:outline-none"
             disabled={!canManage}
           />
           <input
@@ -172,13 +172,13 @@ const Settings = () => {
             placeholder="Full name"
             value={form.full_name}
             onChange={(event) => setForm((prev) => ({ ...prev, full_name: event.target.value }))}
-            className="rounded-md border border-slate-200 px-3 py-2 text-sm focus:border-primary focus:outline-none"
+            className="rounded-md border border-slate-200 px-3 py-2.5 text-sm sm:text-base focus:border-primary focus:outline-none"
             disabled={!canManage}
           />
           <select
             value={form.role}
             onChange={(event) => setForm((prev) => ({ ...prev, role: event.target.value }))}
-            className="rounded-md border border-slate-200 px-3 py-2 text-sm focus:border-primary focus:outline-none"
+            className="rounded-md border border-slate-200 px-3 py-2.5 text-sm sm:text-base focus:border-primary focus:outline-none"
             disabled={!canManage}
           >
             <option value="owner">Owner</option>
@@ -191,14 +191,14 @@ const Settings = () => {
             placeholder="Temporary password"
             value={form.password}
             onChange={(event) => setForm((prev) => ({ ...prev, password: event.target.value }))}
-            className="rounded-md border border-slate-200 px-3 py-2 text-sm focus:border-primary focus:outline-none"
+            className="rounded-md border border-slate-200 px-3 py-2.5 text-sm sm:text-base focus:border-primary focus:outline-none"
             disabled={!canManage}
           />
           <div className="md:col-span-2">
             <button
               type="submit"
               disabled={!canManage}
-              className="rounded-md bg-accent px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:bg-slate-300"
+              className="rounded-md bg-accent px-4 py-2.5 text-sm sm:text-base font-semibold text-white disabled:cursor-not-allowed disabled:bg-slate-300"
             >
               Invite user
             </button>
@@ -206,9 +206,9 @@ const Settings = () => {
         </form>
       </section>
 
-      <section className="rounded-xl bg-white p-6 shadow-sm">
+      <section className="rounded-lg sm:rounded-xl bg-white p-4 sm:p-6 shadow-sm">
         <div className="flex items-center justify-between">
-          <h3 className="font-heading text-lg text-primary">Receipt branding</h3>
+          <h3 className="font-heading text-base sm:text-lg text-primary">Receipt branding</h3>
           {!canManage ? <span className="text-xs font-medium uppercase text-slate-400">Owner only</span> : null}
         </div>
         {receiptMessage ? <p className="mt-3 text-sm text-green-600">{receiptMessage}</p> : null}

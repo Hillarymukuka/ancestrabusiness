@@ -45,19 +45,41 @@ const TrendChart = ({ points = [], className = '', height = 260 }) => {
       maintainAspectRatio: false,
       plugins: {
         legend: {
-          position: 'bottom'
+          position: 'bottom',
+          labels: {
+            padding: 10,
+            font: {
+              size: window.innerWidth < 640 ? 11 : 12,
+              family: 'Satoshi'
+            }
+          }
         },
         title: {
           display: true,
-          text: 'Sales vs Expenses (last 7 days)',
+          text: window.innerWidth < 640 ? 'Sales vs Expenses' : 'Sales vs Expenses (last 7 days)',
           font: {
-            family: 'Satoshi'
+            family: 'Satoshi',
+            size: window.innerWidth < 640 ? 13 : 14
           }
         }
       },
       scales: {
         y: {
-          beginAtZero: true
+          beginAtZero: true,
+          ticks: {
+            font: {
+              size: window.innerWidth < 640 ? 10 : 11
+            }
+          }
+        },
+        x: {
+          ticks: {
+            font: {
+              size: window.innerWidth < 640 ? 10 : 11
+            },
+            maxRotation: window.innerWidth < 640 ? 45 : 0,
+            minRotation: window.innerWidth < 640 ? 45 : 0
+          }
         }
       }
     }),
@@ -65,8 +87,8 @@ const TrendChart = ({ points = [], className = '', height = 260 }) => {
   )
 
   return (
-    <div className={`rounded-2xl bg-white p-6 shadow-sm ${className}`}>
-      <div style={{ height }}>
+    <div className={`rounded-xl sm:rounded-2xl bg-white p-4 sm:p-6 shadow-sm ${className}`}>
+      <div style={{ height: window.innerWidth < 640 ? 240 : height }}>
         <Line data={chartData} options={options} />
       </div>
     </div>

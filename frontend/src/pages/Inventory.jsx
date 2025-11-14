@@ -423,8 +423,8 @@ const Inventory = () => {
             title="Add product"
             description="Capture individual items to keep stock levels accurate."
           >
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid gap-4 md:grid-cols-2">
+            <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
+              <div className="grid gap-3 sm:gap-4 md:grid-cols-2">
                 <input
                   required
                   type="text"
@@ -432,7 +432,7 @@ const Inventory = () => {
                   placeholder="Product name"
                   value={form.name}
                   onChange={handleChange}
-                  className="rounded-md border border-slate-200 px-3 py-2 text-sm focus:border-primary focus:outline-none"
+                  className="rounded-md border border-slate-200 px-3 py-2.5 text-sm sm:text-base focus:border-primary focus:outline-none"
                 />
                 <input
                   required
@@ -441,13 +441,13 @@ const Inventory = () => {
                   placeholder="Category"
                   value={form.category}
                   onChange={handleChange}
-                  className="rounded-md border border-slate-200 px-3 py-2 text-sm focus:border-primary focus:outline-none"
+                  className="rounded-md border border-slate-200 px-3 py-2.5 text-sm sm:text-base focus:border-primary focus:outline-none"
                 />
               </div>
-              <div className="rounded-md border border-slate-100 bg-slate-50 px-3 py-2 text-sm text-slate-500 flex items-center">
+              <div className="rounded-md border border-slate-100 bg-slate-50 px-3 py-2 text-xs sm:text-sm text-slate-500 flex items-center">
                 Product Code- Auto generated
               </div>
-              <div className="grid gap-4 md:grid-cols-3">
+              <div className="grid gap-3 sm:gap-4 md:grid-cols-3">
                 <input
                   required
                   type="number"
@@ -456,7 +456,7 @@ const Inventory = () => {
                   placeholder="Price"
                   value={form.price}
                   onChange={handleChange}
-                  className="rounded-md border border-slate-200 px-3 py-2 text-sm focus:border-primary focus:outline-none"
+                  className="rounded-md border border-slate-200 px-3 py-2.5 text-sm sm:text-base focus:border-primary focus:outline-none"
                 />
                 <input
                   required
@@ -465,7 +465,7 @@ const Inventory = () => {
                   placeholder="Qty"
                   value={form.quantity}
                   onChange={handleChange}
-                  className="rounded-md border border-slate-200 px-3 py-2 text-sm focus:border-primary focus:outline-none"
+                  className="rounded-md border border-slate-200 px-3 py-2.5 text-sm sm:text-base focus:border-primary focus:outline-none"
                 />
                 <input
                   required
@@ -474,7 +474,7 @@ const Inventory = () => {
                   placeholder="Reorder level"
                   value={form.reorder_level}
                   onChange={handleChange}
-                  className="rounded-md border border-slate-200 px-3 py-2 text-sm focus:border-primary focus:outline-none"
+                  className="rounded-md border border-slate-200 px-3 py-2.5 text-sm sm:text-base focus:border-primary focus:outline-none"
                 />
               </div>
               <button

@@ -72,8 +72,9 @@ const Dashboard = () => {
   ]
 
   return (
-    <div className="space-y-6">
-      <section className="grid gap-4 lg:grid-cols-5">
+    <div className="space-y-4 sm:space-y-6">
+      {/* Summary Cards - Responsive grid */}
+      <section className="grid gap-3 sm:gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-5">
         {metricCards.map((card) => (
           <SummaryCard
             key={card.title}
@@ -86,24 +87,25 @@ const Dashboard = () => {
         ))}
       </section>
 
+      {/* Chart and Quick Stats - Stack on mobile, side-by-side on desktop */}
       <section className="grid gap-4 xl:grid-cols-3">
         <TrendChart points={summary.sales_vs_expenses} className="xl:col-span-2" height={240} />
         <div className="flex h-full flex-col gap-4">
-          <div className="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm">
-            <h3 className="font-heading text-lg text-slate-900">Today&apos;s snapshot</h3>
-            <div className="mt-4 space-y-3">
+          <div className="rounded-2xl border border-slate-100 bg-white p-4 sm:p-6 shadow-sm">
+            <h3 className="font-heading text-base sm:text-lg text-slate-900">Today&apos;s snapshot</h3>
+            <div className="mt-3 sm:mt-4 space-y-2 sm:space-y-3">
               {quickStats.map((stat) => (
-                <div key={stat.label} className="flex items-center justify-between text-sm text-slate-600">
+                <div key={stat.label} className="flex items-center justify-between text-xs sm:text-sm text-slate-600">
                   <span className="text-slate-500">{stat.label}</span>
                   <span className="font-semibold text-slate-900">{stat.value}</span>
                 </div>
               ))}
             </div>
-            <div className="mt-6 grid gap-3 sm:grid-cols-3">
+            <div className="mt-4 sm:mt-6 grid gap-2 sm:gap-3 grid-cols-1 sm:grid-cols-3">
               {summary.period_summaries.map((period) => (
-                <div key={period.label} className="rounded-xl border border-slate-100 bg-slate-50 p-3">
+                <div key={period.label} className="rounded-xl border border-slate-100 bg-slate-50 p-2 sm:p-3">
                   <p className="text-xs font-semibold uppercase tracking-widest text-slate-400">{period.label}</p>
-                  <p className="mt-2 text-sm font-semibold text-slate-800">{formatCurrency(period.profit)}</p>
+                  <p className="mt-1 sm:mt-2 text-sm font-semibold text-slate-800">{formatCurrency(period.profit)}</p>
                   <p className="text-xs text-slate-400">Profit</p>
                 </div>
               ))}
@@ -113,6 +115,7 @@ const Dashboard = () => {
         </div>
       </section>
 
+      {/* Best Sellers Table */}
       <section>
         <BestSellersTable products={summary.best_sellers} />
       </section>

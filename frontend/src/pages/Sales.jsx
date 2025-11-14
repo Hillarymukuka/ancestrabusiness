@@ -202,20 +202,20 @@ const Sales = () => {
         )}
       </header>
 
-      <section className="space-y-6">
+      <section className="space-y-4 sm:space-y-6">
         {/* Top row: Sale entry (left) and Receipt preview (right) */}
-        <div className="grid gap-6 lg:grid-cols-3">
-          <div className="lg:col-span-2 space-y-4">
+        <div className="grid gap-4 sm:gap-6 lg:grid-cols-3">
+          <div className="lg:col-span-2 space-y-3 sm:space-y-4">
             <Card>
-              <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-3 sm:gap-4">
                 {/* Product search - full width */}
                 <div className="w-full">
-                  <label className="block text-sm text-slate-600">Find product</label>
+                  <label className="block text-xs sm:text-sm text-slate-600">Find product</label>
                   <input
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     placeholder="Search by name or product code..."
-                    className="mt-1 w-full rounded-md border border-slate-200 px-3 py-2 text-sm focus:outline-none"
+                    className="mt-1 w-full rounded-md border border-slate-200 px-3 py-2.5 text-sm sm:text-base focus:outline-none"
                   />
 
                   <div className="max-h-48 overflow-auto mt-2 rounded-md border border-slate-100 bg-white">
@@ -249,15 +249,15 @@ const Sales = () => {
                 </div>
 
                 {/* Quantity and Add button - stacked on mobile, side by side on desktop */}
-                <div className="flex flex-col sm:flex-row gap-3 sm:justify-center sm:items-end">
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 sm:justify-center sm:items-end">
                   <div className="flex-1 sm:flex-none sm:w-32">
-                    <label className="block text-sm text-slate-600">Qty</label>
+                    <label className="block text-xs sm:text-sm text-slate-600">Qty</label>
                     <input
                       type="number"
                       min="1"
                       value={selectedQty}
                       onChange={(e) => setSelectedQty(Number(e.target.value))}
-                      className="mt-1 w-full rounded-md border border-slate-200 px-3 py-2 text-sm focus:outline-none"
+                      className="mt-1 w-full rounded-md border border-slate-200 px-3 py-2.5 text-sm sm:text-base focus:outline-none"
                     />
                   </div>
 
@@ -268,7 +268,8 @@ const Sales = () => {
                         e.preventDefault()
                         addSelectedToSale()
                       }}
-                      className="w-full rounded-md bg-primary px-3 py-2 text-sm font-semibold text-white hover:bg-primary/90"
+                      className="w-full rounded-md bg-primary px-3 py-2.5 text-sm sm:text-base font-semibold text-white hover:bg-primary/90 disabled:opacity-50"
+                      disabled={!selectedProductId}
                     >
                       Add to sale
                     </button>
@@ -278,12 +279,12 @@ const Sales = () => {
             </Card>
 
             <Card>
-              <h3 className="text-sm font-semibold text-slate-700">Current sale</h3>
+              <h3 className="text-xs sm:text-sm font-semibold text-slate-700">Current sale</h3>
               {form.items.length === 0 ? (
-                <p className="text-sm text-slate-500 mt-4">No items added yet.</p>
+                <p className="text-sm text-slate-500 mt-3 sm:mt-4">No items added yet.</p>
               ) : (
-                <div className="mt-4">
-                  <table className="min-w-full text-sm">
+                <div className="mt-3 sm:mt-4 overflow-x-auto -mx-4 sm:mx-0">
+                  <table className="min-w-full text-xs sm:text-sm">
                     <thead className="text-slate-600 text-xs uppercase">
                       <tr>
                         <th className="text-left px-2 py-2">Product</th>
@@ -316,19 +317,19 @@ const Sales = () => {
                     <div className="text-lg font-semibold">Total: ZMW {total.toFixed(2)}</div>
                   </div>
 
-                  <form onSubmit={handleSubmit} className="mt-4 grid gap-2 md:grid-cols-3">
+                  <form onSubmit={handleSubmit} className="mt-3 sm:mt-4 grid gap-2 sm:gap-3 md:grid-cols-3">
                     <input
                       type="text"
                       placeholder="Customer name (optional)"
                       value={form.customer_name}
                       onChange={(e) => setForm((p) => ({ ...p, customer_name: e.target.value }))}
-                      className="rounded-md border border-slate-200 px-3 py-2 text-sm md:col-span-2"
+                      className="rounded-md border border-slate-200 px-3 py-2.5 text-sm sm:text-base md:col-span-2"
                     />
                     <div className="md:col-span-1">
                       <select
                         value={form.payment_method}
                         onChange={(e) => setForm((p) => ({ ...p, payment_method: e.target.value }))}
-                        className="w-full rounded-md border border-slate-200 px-3 py-2 text-sm"
+                        className="w-full rounded-md border border-slate-200 px-3 py-2.5 text-sm sm:text-base"
                       >
                         {PAYMENT_METHODS.map((m) => (
                           <option key={m.value} value={m.value}>{m.label}</option>
@@ -336,18 +337,18 @@ const Sales = () => {
                       </select>
                     </div>
 
-                    <div className="md:col-span-3 flex gap-2">
+                    <div className="md:col-span-3 flex flex-col sm:flex-row gap-2">
                       <button
                         type="submit"
                         disabled={!canSubmit || submitting}
                         title="Complete Sale"
-                        className="w-full flex items-center justify-center gap-2 rounded-full bg-primary px-10 py-4 text-lg font-extrabold text-white shadow-2xl hover:bg-primary/95 disabled:opacity-60 disabled:cursor-not-allowed"
+                        className="w-full flex items-center justify-center gap-2 rounded-full bg-primary px-6 sm:px-10 py-3 sm:py-4 text-base sm:text-lg font-extrabold text-white shadow-2xl hover:bg-primary/95 disabled:opacity-60 disabled:cursor-not-allowed"
                       >
                         {submitting ? (
                           'Processing...'
                         ) : (
                           <>
-                            <Check className="w-4 h-4" />
+                            <Check className="w-4 h-4 sm:w-5 sm:h-5" />
                             <span>Complete Sale</span>
                           </>
                         )}
@@ -355,7 +356,7 @@ const Sales = () => {
                       <button
                         type="button"
                         onClick={() => setForm({ customer_name: '', payment_method: defaultPaymentMethod, items: [] })}
-                        className="rounded-md border px-4 py-2 text-sm"
+                        className="rounded-md border px-4 py-2.5 text-sm sm:text-base whitespace-nowrap"
                       >
                         Clear
                       </button>

@@ -92,7 +92,7 @@ const Expenses = () => {
 
       {canManage ? (
         <Card title="Record expense" description="Log company spending with optional receipt uploads.">
-          <form onSubmit={handleSubmit} className="grid gap-4 md:grid-cols-4">
+          <form onSubmit={handleSubmit} className="grid gap-3 sm:gap-4 md:grid-cols-4">
             <input
               required
               type="text"
@@ -100,7 +100,7 @@ const Expenses = () => {
               placeholder="Description"
               value={form.description}
               onChange={(event) => setForm((prev) => ({ ...prev, description: event.target.value }))}
-              className="rounded-md border border-slate-200 px-3 py-2 text-sm focus:border-primary focus:outline-none md:col-span-2"
+              className="rounded-md border border-slate-200 px-3 py-2.5 text-sm sm:text-base focus:border-primary focus:outline-none md:col-span-2"
             />
             <input
               required
@@ -109,7 +109,7 @@ const Expenses = () => {
               placeholder="Category"
               value={form.category}
               onChange={(event) => setForm((prev) => ({ ...prev, category: event.target.value }))}
-              className="rounded-md border border-slate-200 px-3 py-2 text-sm focus:border-primary focus:outline-none"
+              className="rounded-md border border-slate-200 px-3 py-2.5 text-sm sm:text-base focus:border-primary focus:outline-none"
             />
             <input
               required
@@ -119,7 +119,7 @@ const Expenses = () => {
               placeholder="Amount"
               value={form.amount}
               onChange={(event) => setForm((prev) => ({ ...prev, amount: event.target.value }))}
-              className="rounded-md border border-slate-200 px-3 py-2 text-sm focus:border-primary focus:outline-none"
+              className="rounded-md border border-slate-200 px-3 py-2.5 text-sm sm:text-base focus:border-primary focus:outline-none"
             />
             <input
               required
@@ -127,14 +127,14 @@ const Expenses = () => {
               name="expense_date"
               value={form.expense_date}
               onChange={(event) => setForm((prev) => ({ ...prev, expense_date: event.target.value }))}
-              className="rounded-md border border-slate-200 px-3 py-2 text-sm focus:border-primary focus:outline-none"
+              className="rounded-md border border-slate-200 px-3 py-2.5 text-sm sm:text-base focus:border-primary focus:outline-none"
             />
             <div className="md:col-span-2">
               <label className="text-xs font-semibold uppercase tracking-widest text-slate-500">
                 Receipt (optional)
               </label>
-              <div className="mt-1 flex items-center gap-3">
-                <label className="inline-flex cursor-pointer items-center justify-center rounded-md border border-slate-200 px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50">
+              <div className="mt-1 flex items-center gap-2 sm:gap-3">
+                <label className="inline-flex cursor-pointer items-center justify-center rounded-md border border-slate-200 px-3 py-2.5 text-sm sm:text-base font-medium text-slate-600 hover:bg-slate-50">
                   <input
                     key={receiptFileName || 'empty'}
                     type="file"
@@ -144,7 +144,7 @@ const Expenses = () => {
                   />
                   Upload file
                 </label>
-                <span className="truncate text-xs text-slate-500">
+                <span className="truncate text-xs text-slate-500 min-w-0">
                   {receiptFileName ? receiptFileName : 'No file chosen'}
                 </span>
               </div>
@@ -152,7 +152,7 @@ const Expenses = () => {
             <div className="md:col-span-4">
               <button
                 type="submit"
-                className="mt-2 rounded-md bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90"
+                className="mt-2 rounded-md bg-primary px-4 py-2.5 text-sm sm:text-base font-semibold text-white hover:bg-primary/90"
               >
                 Add expense
               </button>
@@ -162,29 +162,29 @@ const Expenses = () => {
       ) : null}
 
       <Card title="Filters" description="Narrow down expenses by date range or category.">
-        <form onSubmit={handleFilterSubmit} className="grid gap-3 md:grid-cols-4">
+        <form onSubmit={handleFilterSubmit} className="grid gap-2 sm:gap-3 md:grid-cols-4">
           <input
             type="date"
             value={filters.start}
             onChange={(event) => setFilters((prev) => ({ ...prev, start: event.target.value }))}
-            className="rounded-md border border-slate-200 px-3 py-2 text-sm focus:border-primary focus:outline-none"
+            className="rounded-md border border-slate-200 px-3 py-2.5 text-sm sm:text-base focus:border-primary focus:outline-none"
           />
           <input
             type="date"
             value={filters.end}
             onChange={(event) => setFilters((prev) => ({ ...prev, end: event.target.value }))}
-            className="rounded-md border border-slate-200 px-3 py-2 text-sm focus:border-primary focus:outline-none"
+            className="rounded-md border border-slate-200 px-3 py-2.5 text-sm sm:text-base focus:border-primary focus:outline-none"
           />
           <input
             type="text"
             placeholder="Category"
             value={filters.category}
             onChange={(event) => setFilters((prev) => ({ ...prev, category: event.target.value }))}
-            className="rounded-md border border-slate-200 px-3 py-2 text-sm focus:border-primary focus:outline-none"
+            className="rounded-md border border-slate-200 px-3 py-2.5 text-sm sm:text-base focus:border-primary focus:outline-none"
           />
           <button
             type="submit"
-            className="rounded-md bg-accent px-4 py-2 text-sm font-semibold text-white hover:bg-accent/90"
+            className="rounded-md bg-accent px-4 py-2.5 text-sm sm:text-base font-semibold text-white hover:bg-accent/90"
           >
             Apply
           </button>

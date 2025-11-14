@@ -250,37 +250,37 @@ const Reports = () => {
           <button
             type="button"
             onClick={refresh}
-            className="rounded-md border border-primary px-4 py-2 text-sm font-medium text-primary hover:bg-primary/10"
+            className="rounded-md border border-primary px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-primary hover:bg-primary/10"
           >
             Refresh
           </button>
           <button
             type="button"
             onClick={handleExport}
-            className="rounded-md bg-accent px-4 py-2 text-sm font-semibold text-white hover:bg-accent/90"
+            className="rounded-md bg-accent px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold text-white hover:bg-accent/90"
           >
             Export PDF
           </button>
         </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid gap-3 sm:gap-4 sm:grid-cols-2 md:grid-cols-3">
         {summary.period_summaries.map((period) => (
-          <div key={period.label} className="rounded-xl bg-white p-6 shadow-sm">
-            <p className="text-sm font-medium text-slate-500">{period.label}</p>
-            <p className="mt-3 text-sm text-slate-600">Sales: <Currency value={period.sales} /></p>
-            <p className="text-sm text-slate-600">Expenses: <Currency value={period.expenses} /></p>
-            <p className="mt-2 text-lg font-semibold text-primary">Profit: <Currency value={period.profit} /></p>
+          <div key={period.label} className="rounded-lg sm:rounded-xl bg-white p-4 sm:p-6 shadow-sm">
+            <p className="text-xs sm:text-sm font-medium text-slate-500">{period.label}</p>
+            <p className="mt-2 sm:mt-3 text-xs sm:text-sm text-slate-600">Sales: <Currency value={period.sales} /></p>
+            <p className="text-xs sm:text-sm text-slate-600">Expenses: <Currency value={period.expenses} /></p>
+            <p className="mt-2 text-base sm:text-lg font-semibold text-primary">Profit: <Currency value={period.profit} /></p>
           </div>
         ))}
       </div>
 
       {/* Three Charts in One Row */}
-      <div className="grid gap-6 lg:grid-cols-3">
+      <div className="grid gap-4 sm:gap-6 lg:grid-cols-3">
         {/* Period Summary Chart */}
         {periodSummaryChart && (
-          <div className="rounded-xl bg-white p-6 shadow-sm">
-            <h3 className="text-lg font-semibold text-slate-900 mb-2">Current Period Breakdown</h3>
+          <div className="rounded-lg sm:rounded-xl bg-white p-4 sm:p-6 shadow-sm">
+            <h3 className="text-base sm:text-lg font-semibold text-slate-900 mb-2">Current Period Breakdown</h3>
             <p className="text-sm text-slate-500 mb-4">Sales vs Expenses distribution</p>
             <Chart
               options={periodSummaryChart.options}
@@ -293,8 +293,8 @@ const Reports = () => {
 
         {/* Sales vs Expenses Chart */}
         {salesVsExpensesChart && (
-          <div className="rounded-xl bg-white p-6 shadow-sm">
-            <h3 className="text-lg font-semibold text-slate-900 mb-2">Sales, Expenses & Profit Trend</h3>
+          <div className="rounded-lg sm:rounded-xl bg-white p-4 sm:p-6 shadow-sm">
+            <h3 className="text-base sm:text-lg font-semibold text-slate-900 mb-2">Sales, Expenses & Profit Trend</h3>
             <p className="text-sm text-slate-500 mb-4">Last 7 days performance</p>
             <Chart
               options={salesVsExpensesChart.options}
@@ -307,8 +307,8 @@ const Reports = () => {
 
         {/* Sales by User Chart */}
         {salesByUserChart && summary.sales_by_user && summary.sales_by_user.length > 0 && (
-          <div className="rounded-xl bg-white p-6 shadow-sm">
-            <h3 className="text-lg font-semibold text-slate-900 mb-2">Top 5 Sales Performers</h3>
+          <div className="rounded-lg sm:rounded-xl bg-white p-4 sm:p-6 shadow-sm">
+            <h3 className="text-base sm:text-lg font-semibold text-slate-900 mb-2">Top 5 Sales Performers</h3>
             <p className="text-sm text-slate-500 mb-4">Performance comparison by team member</p>
             <Chart
               options={salesByUserChart.options}
@@ -322,9 +322,9 @@ const Reports = () => {
 
       {/* Sales by User Table (Latest first - sorted by total sales) */}
       {summary.sales_by_user && summary.sales_by_user.length > 0 && (
-        <div className="overflow-hidden rounded-xl bg-white shadow-sm">
-          <div className="border-b border-slate-200 px-6 py-4">
-            <h3 className="text-lg font-semibold text-slate-900">Sales by User</h3>
+        <div className="overflow-hidden rounded-lg sm:rounded-xl bg-white shadow-sm">
+          <div className="border-b border-slate-100 p-4 sm:p-6">
+            <h3 className="text-base sm:text-lg font-semibold text-slate-900">Sales by User</h3>
             <p className="text-sm text-slate-500">Top performers and deleted user records</p>
           </div>
           <table className="min-w-full divide-y divide-slate-200">
@@ -367,9 +367,9 @@ const Reports = () => {
       )}
 
       {/* Sales vs Expenses - Reversed to show latest first */}
-      <div className="overflow-hidden rounded-xl bg-white shadow-sm">
-        <div className="border-b border-slate-200 px-6 py-4">
-          <h3 className="text-lg font-semibold text-slate-900">Daily Sales vs Expenses</h3>
+      <div className="overflow-hidden rounded-lg sm:rounded-xl bg-white shadow-sm">
+        <div className="border-b border-slate-100 p-4 sm:p-6">
+          <h3 className="text-base sm:text-lg font-semibold text-slate-900">Daily Sales vs Expenses</h3>
           <p className="text-sm text-slate-500">Latest transactions first</p>
         </div>
         <table className="min-w-full divide-y divide-slate-200">

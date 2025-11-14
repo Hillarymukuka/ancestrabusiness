@@ -9,3 +9,56 @@ html, body {
 body {
   background-color: #F9FAFB;
 }
+
+/* Mobile-first improvements */
+@layer base {
+  /* Better touch targets - minimum 44x44px for iOS guidelines */
+  button, 
+  a,
+  [role="button"] {
+    @apply min-h-[44px] sm:min-h-[40px];
+  }
+
+  /* Prevent text size adjustment on iOS */
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* Smooth scrolling for better mobile UX */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Improve input focus on mobile */
+  input,
+  textarea,
+  select {
+    @apply text-base sm:text-sm; /* Prevents zoom on iOS */
+  }
+}
+
+@layer utilities {
+  /* Safe area padding for mobile devices with notches */
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  /* Hide scrollbar but keep functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Better tap highlight */
+  .tap-highlight-none {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
