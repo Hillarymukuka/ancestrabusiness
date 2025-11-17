@@ -13,6 +13,4 @@ class ReceiptSettings(Base):
     company_logo_url = Column(String(255), nullable=True)
     company_tagline = Column(String(255), nullable=True)
     footer_message = Column(Text, nullable=False, default="Thank you for shopping with us!")
-    qr_code_type = Column(String(10), nullable=False, default="text")  # 'text' or 'url'
-    qr_code_content = Column(Text, nullable=True)  # The actual text or URL for QR code
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
