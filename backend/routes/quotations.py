@@ -1,5 +1,6 @@
 from datetime import date
 from io import BytesIO
+import qrcode
 
 from fastapi import APIRouter, Depends, Response, HTTPException, status
 from fpdf import FPDF
@@ -181,6 +182,43 @@ def generate_quotation_pdf(
     pdf.set_x(110)
     pdf.set_font("Arial", "", 9)
     pdf.cell(80, 5, "customer signature", align="R", ln=True)
+    
+    # Add QR Code if configured
+    if settings and settings.qr_code_content:
+        try:
+            # Generate QR code
+            qr = qrcode.QRCode(version=1, box_size=3, border=2)
+            qr.add_data(settings.qr_code_content)
+            qr.make(fit=True)
+            qr_img = qr.make_image(fill_color="black", back_color="white")
+            
+            # Save QR code to bytes
+            qr_buffer = BytesIO()
+            qr_img.save(qr_buffer, format='PNG')
+            qr_buffer.seek(0)
+            
+            # Save temporarily to add to PDF
+            import tempfile
+            import os
+            with tempfile.NamedTemporaryFile(delete=False, suffix='.png') as tmp_file:
+                tmp_file.write(qr_buffer.getvalue())
+                tmp_path = tmp_file.name
+            
+            # Add QR code to PDF (bottom right)
+            pdf.ln(5)
+            pdf.image(tmp_path, x=160, y=pdf.get_y(), w=30)
+            
+            # Clean up temp file
+            os.unlink(tmp_path)
+            
+            # Add label below QR code
+            pdf.set_xy(155, pdf.get_y() + 32)
+            pdf.set_font("Arial", "", 8)
+            qr_label = "Scan QR Code" if settings.qr_code_type == "url" else "QR Code"
+            pdf.cell(40, 4, qr_label, align="C")
+        except Exception as e:
+            # If QR code generation fails, continue without it
+            print(f"QR Code generation error: {e}")
     
     # Get PDF content
     pdf_content = bytes(pdf.output())

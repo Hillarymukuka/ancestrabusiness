@@ -308,6 +308,48 @@ const Settings = () => {
                 disabled={!canManage || receiptSaving}
               />
             </div>
+            
+            {/* QR Code Configuration */}
+            <div className="border-t border-slate-200 pt-4 mt-2">
+              <h4 className="text-sm font-semibold text-slate-700 mb-3">QR Code Settings (For Quotations)</h4>
+              <div className="space-y-4">
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs font-semibold uppercase tracking-widest text-slate-500">
+                    QR Code Type
+                  </label>
+                  <select
+                    value={receiptForm.qr_code_type || 'text'}
+                    onChange={(event) => setReceiptForm((prev) => ({ ...prev, qr_code_type: event.target.value }))}
+                    className="rounded-md border border-slate-200 px-3 py-2 text-sm focus:border-primary focus:outline-none"
+                    disabled={!canManage || receiptSaving}
+                  >
+                    <option value="text">Text</option>
+                    <option value="url">Website URL</option>
+                  </select>
+                  <p className="text-xs text-slate-500">Choose what the QR code should contain</p>
+                </div>
+                
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs font-semibold uppercase tracking-widest text-slate-500">
+                    QR Code Content
+                  </label>
+                  <textarea
+                    rows={2}
+                    value={receiptForm.qr_code_content || ''}
+                    onChange={(event) => setReceiptForm((prev) => ({ ...prev, qr_code_content: event.target.value }))}
+                    className="rounded-md border border-slate-200 px-3 py-2 text-sm focus:border-primary focus:outline-none"
+                    placeholder={receiptForm.qr_code_type === 'url' ? 'e.g. https://yourwebsite.com' : 'e.g. Contact us at +260 XXX XXX'}
+                    disabled={!canManage || receiptSaving}
+                  />
+                  <p className="text-xs text-slate-500">
+                    {receiptForm.qr_code_type === 'url' 
+                      ? 'Enter your website URL (must start with http:// or https://)' 
+                      : 'Enter any text you want in the QR code (contact info, message, etc.)'}
+                  </p>
+                </div>
+              </div>
+            </div>
+            
             <div>
               <button
                 type="submit"
