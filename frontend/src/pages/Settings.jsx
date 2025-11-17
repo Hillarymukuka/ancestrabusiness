@@ -311,7 +311,7 @@ const Settings = () => {
             
             {/* QR Code Configuration */}
             <div className="border-t border-slate-200 pt-4 mt-2">
-              <h4 className="text-sm font-semibold text-slate-700 mb-3">QR Code Settings (For Quotations)</h4>
+              <h4 className="text-sm font-semibold text-slate-700 mb-3">QR Code Settings (Receipts & Quotations)</h4>
               <div className="space-y-4">
                 <div className="flex flex-col gap-2">
                   <label className="text-xs font-semibold uppercase tracking-widest text-slate-500">
@@ -326,7 +326,7 @@ const Settings = () => {
                     <option value="text">Text</option>
                     <option value="url">Website URL</option>
                   </select>
-                  <p className="text-xs text-slate-500">Choose what the QR code should contain</p>
+                  <p className="text-xs text-slate-500">Choose what the QR code should contain on receipts and quotations</p>
                 </div>
                 
                 <div className="flex flex-col gap-2">
@@ -338,13 +338,13 @@ const Settings = () => {
                     value={receiptForm.qr_code_content || ''}
                     onChange={(event) => setReceiptForm((prev) => ({ ...prev, qr_code_content: event.target.value }))}
                     className="rounded-md border border-slate-200 px-3 py-2 text-sm focus:border-primary focus:outline-none"
-                    placeholder={receiptForm.qr_code_type === 'url' ? 'e.g. https://yourwebsite.com' : 'e.g. Contact us at +260 XXX XXX'}
+                    placeholder={receiptForm.qr_code_type === 'url' ? 'e.g. https://yourwebsite.com' : 'e.g. Contact us at +260 XXX XXX or visit our store'}
                     disabled={!canManage || receiptSaving}
                   />
                   <p className="text-xs text-slate-500">
                     {receiptForm.qr_code_type === 'url' 
-                      ? 'Enter your website URL (must start with http:// or https://)' 
-                      : 'Enter any text you want in the QR code (contact info, message, etc.)'}
+                      ? 'Enter your website URL (must start with http:// or https://). Customers can scan to visit your site.' 
+                      : 'Enter any text (contact info, social media, promotional message). Leave empty to show receipt details.'}
                   </p>
                 </div>
               </div>

@@ -388,7 +388,14 @@ def get_sale_receipt(
         raise HTTPException(status_code=404, detail="Sale not found")
 
     receipt_settings = get_receipt_settings(db)
-    qr_payload = f"{sale.receipt_number}|{sale.total_amount:.2f}|{sale.created_at.isoformat()}"
+    
+    # Use custom QR code content if configured, otherwise use receipt details
+    if receipt_settings.qr_code_content:
+        qr_payload = receipt_settings.qr_code_content
+    else:
+        # Default: encode receipt details
+        qr_payload = f"{sale.receipt_number}|{sale.total_amount:.2f}|{sale.created_at.isoformat()}"
+    
     qr_code_url = encode_qr_code(qr_payload)
     html = build_receipt_markup(sale, qr_code_url, receipt_settings)
     sale_read = to_sale_read(sale)
