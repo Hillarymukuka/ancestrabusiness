@@ -1,4 +1,4 @@
-import { CalendarDays, CreditCard, DollarSign, ShoppingBag, TrendingUp } from 'lucide-react'
+import { CalendarDays, CreditCard, DollarSign, RefreshCw, ShoppingBag, TrendingUp } from 'lucide-react'
 
 import BestSellersTable from '../components/dashboard/BestSellersTable.jsx'
 import LowStockList from '../components/dashboard/LowStockList.jsx'
@@ -13,7 +13,11 @@ const formatCurrency = (value) =>
   })}`
 
 const Dashboard = () => {
-  const { summary, loading, error } = useDashboard()
+  const { summary, loading, error, refresh } = useDashboard()
+
+  const handleRefresh = async () => {
+    await refresh()
+  }
 
   if (loading) {
     return <p className="text-sm text-slate-500">Loading dashboard...</p>
@@ -73,6 +77,20 @@ const Dashboard = () => {
 
   return (
     <div className="space-y-4 sm:space-y-6">
+      {/* Header with Refresh Button */}
+      <div className="flex items-center justify-between">
+        <h1 className="font-heading text-xl sm:text-2xl text-slate-900">Dashboard</h1>
+        <button
+          onClick={handleRefresh}
+          disabled={loading}
+          className="flex items-center gap-2 rounded-lg bg-primary px-3 sm:px-4 py-2 text-sm font-medium text-white transition hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
+          title="Refresh dashboard data"
+        >
+          <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+          <span className="hidden sm:inline">Refresh</span>
+        </button>
+      </div>
+
       {/* Summary Cards - Responsive grid */}
       <section className="grid gap-3 sm:gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-5">
         {metricCards.map((card) => (

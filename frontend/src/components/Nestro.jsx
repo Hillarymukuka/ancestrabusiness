@@ -177,14 +177,14 @@ const Nestro = () => {
       {/* Chat Bubble Button */}
       <button
         onClick={toggleChat}
-        className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-purple-600 to-purple-700 text-white shadow-lg transition-all hover:scale-110 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+        className="fixed bottom-20 right-4 lg:bottom-6 lg:right-6 z-50 flex h-12 w-12 lg:h-14 lg:w-14 items-center justify-center rounded-full bg-gradient-to-br from-purple-600 to-purple-700 text-white shadow-lg transition-all hover:scale-110 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
         aria-label="Open Nestro Help Assistant"
       >
         {isOpen ? (
-          <X className="h-6 w-6" />
+          <X className="h-5 w-5 lg:h-6 lg:w-6" />
         ) : (
           <>
-            <MessageCircle className="h-6 w-6" />
+            <MessageCircle className="h-5 w-5 lg:h-6 lg:w-6" />
             {hasUnread && (
               <span className="absolute -top-1 -right-1 flex h-4 w-4">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-orange-400 opacity-75"></span>
@@ -197,7 +197,7 @@ const Nestro = () => {
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-24 right-6 z-50 flex h-[600px] w-[400px] flex-col rounded-2xl bg-white shadow-2xl">
+        <div className="fixed bottom-32 right-2 left-2 lg:bottom-24 lg:right-6 lg:left-auto z-50 flex h-[500px] w-auto lg:h-[600px] lg:w-[400px] flex-col rounded-2xl bg-white shadow-2xl">
           {/* Header */}
           <div className="flex items-center justify-between rounded-t-2xl bg-gradient-to-r from-purple-600 to-purple-700 px-5 py-4 text-white">
             <div className="flex items-center gap-3">
